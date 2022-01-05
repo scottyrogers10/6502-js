@@ -12,6 +12,7 @@
 		"start": "webpack serve --config webpack/dev.js"
 	},
 	"dependencies": {
+		"aphrodite": "^2.4.0",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2"
 	},
