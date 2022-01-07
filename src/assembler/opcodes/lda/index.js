@@ -1,56 +1,21 @@
 import {
-	isImmediateMode,
-	isZeroPageMode,
-	isZeroPageXMode,
-	isAbsoluteMode,
-	isAbsoluteXMode,
-	isAbsoluteYMode,
-	isIndirectXMode,
-	isIndirectYMode,
+	absolute,
+	absoluteX,
+	absoluteY,
+	immediate,
+	indirectX,
+	indirectY,
+	zeroPage,
+	zeroPageX,
 } from "/assembler/address-modes";
 
-const assembleImmediateMode = (tokens) => {
-	return ["a9", tokens[0].substring(2).toLowerCase()];
-};
-
-const assembleZeroPageMode = (tokens) => {
-	return ["a5", tokens[0].substring(1).toLowerCase()];
-};
-
-const assembleZeroPageXMode = (tokens) => {
-	return ["b5", tokens[0].substring(1).toLowerCase()];
-};
-
-const assembleAbsoluteMode = (tokens) => {
-	const word = tokens[0].substring(1).toLowerCase();
-	return ["ad", word.substring(2, 4), word.substring(0, 2)];
-};
-
-const assembleAbsoluteXMode = (tokens) => {
-	const word = tokens[0].substring(1).toLowerCase();
-	return ["bd", word.substring(2, 4), word.substring(0, 2)];
-};
-
-const assembleAbsoluteYMode = (tokens) => {
-	const word = tokens[0].substring(1).toLowerCase();
-	return ["b9", word.substring(2, 4), word.substring(0, 2)];
-};
-
-const assembleIndirectXMode = (tokens) => {
-	return ["a1", tokens[0].substring(2)];
-};
-
-const assembleIndirectYMode = (tokens) => {
-	return ["b1", tokens[0].substring(2, 4)];
-};
-
-export default (tokens) => {
-	if (isImmediateMode(tokens)) return assembleImmediateMode(tokens);
-	if (isZeroPageMode(tokens)) return assembleZeroPageMode(tokens);
-	if (isZeroPageXMode(tokens)) return assembleZeroPageXMode(tokens);
-	if (isAbsoluteMode(tokens)) return assembleAbsoluteMode(tokens);
-	if (isAbsoluteXMode(tokens)) return assembleAbsoluteXMode(tokens);
-	if (isAbsoluteYMode(tokens)) return assembleAbsoluteYMode(tokens);
-	if (isIndirectXMode(tokens)) return assembleIndirectXMode(tokens);
-	if (isIndirectYMode(tokens)) return assembleIndirectYMode(tokens);
+export default (params) => {
+	if (absolute.isMode(params)) return absolute.assemble("ad", params);
+	if (absoluteX.isMode(params)) return absoluteX.assemble("bd", params);
+	if (absoluteY.isMode(params)) return absoluteY.assemble("b9", params);
+	if (immediate.isMode(params)) return immediate.assemble("a9", params);
+	if (indirectX.isMode(params)) return indirectX.assemble("a1", params);
+	if (indirectY.isMode(params)) return indirectY.assemble("b1", params);
+	if (zeroPage.isMode(params)) return zeroPage.assemble("a5", params);
+	if (zeroPageX.isMode(params)) return zeroPageX.assemble("b5", params);
 };

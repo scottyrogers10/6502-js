@@ -1,50 +1,11 @@
-import {
-	isZeroPageMode,
-	isZeroPageXMode,
-	isAbsoluteMode,
-	isAbsoluteXMode,
-	isAbsoluteYMode,
-	isIndirectXMode,
-	isIndirectYMode,
-} from "/assembler/address-modes";
+import { absolute, absoluteX, absoluteY, indirectX, indirectY, zeroPage, zeroPageX } from "/assembler/address-modes";
 
-const assembleZeroPageMode = (tokens) => {
-	return ["85", tokens[0].substring(1).toLowerCase()];
-};
-
-const assembleZeroPageXMode = (tokens) => {
-	return ["95", tokens[0].substring(1).toLowerCase()];
-};
-
-const assembleAbsoluteMode = (tokens) => {
-	const word = tokens[0].substring(1).toLowerCase();
-	return ["8d", word.substring(2, 4), word.substring(0, 2)];
-};
-
-const assembleAbsoluteXMode = (tokens) => {
-	const word = tokens[0].substring(1).toLowerCase();
-	return ["9d", word.substring(2, 4), word.substring(0, 2)];
-};
-
-const assembleAbsoluteYMode = (tokens) => {
-	const word = tokens[0].substring(1).toLowerCase();
-	return ["99", word.substring(2, 4), word.substring(0, 2)];
-};
-
-const assembleIndirectXMode = (tokens) => {
-	return ["81", tokens[0].substring(2)];
-};
-
-const assembleIndirectYMode = (tokens) => {
-	return ["91", tokens[0].substring(2, 4)];
-};
-
-export default (tokens) => {
-	if (isZeroPageMode(tokens)) return assembleZeroPageMode(tokens);
-	if (isZeroPageXMode(tokens)) return assembleZeroPageXMode(tokens);
-	if (isAbsoluteMode(tokens)) return assembleAbsoluteMode(tokens);
-	if (isAbsoluteXMode(tokens)) return assembleAbsoluteXMode(tokens);
-	if (isAbsoluteYMode(tokens)) return assembleAbsoluteYMode(tokens);
-	if (isIndirectXMode(tokens)) return assembleIndirectXMode(tokens);
-	if (isIndirectYMode(tokens)) return assembleIndirectYMode(tokens);
+export default (params) => {
+	if (absolute.isMode(params)) return absolute.assemble("8d", params);
+	if (absoluteX.isMode(params)) return absoluteX.assemble("9d", params);
+	if (absoluteY.isMode(params)) return absoluteY.assemble("99", params);
+	if (indirectX.isMode(params)) return indirectX.assemble("81", params);
+	if (indirectY.isMode(params)) return indirectY.assemble("91", params);
+	if (zeroPage.isMode(params)) return zeroPage.assemble("85", params);
+	if (zeroPageX.isMode(params)) return zeroPageX.assemble("95", params);
 };
