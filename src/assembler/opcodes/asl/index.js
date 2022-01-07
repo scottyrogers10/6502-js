@@ -1,37 +1,9 @@
-import {
-	isAccumulatorMode,
-	isZeroPageMode,
-	isZeroPageXMode,
-	isAbsoluteMode,
-	isAbsoluteXMode,
-} from "/assembler/address-modes";
+import { absolute, absoluteX, accumulator, zeroPage, zeroPageX } from "/assembler/address-modes";
 
-const assembleAccumulatorMode = (tokens) => {
-	return ["0a"];
-};
-
-const assembleZeroPageMode = (tokens) => {
-	return ["06", tokens[0].substring(1).toLowerCase()];
-};
-
-const assembleZeroPageXMode = (tokens) => {
-	return ["16", tokens[0].substring(1).toLowerCase()];
-};
-
-const assembleAbsoluteMode = (tokens) => {
-	const word = tokens[0].substring(1).toLowerCase();
-	return ["0e", word.substring(2, 4), word.substring(0, 2)];
-};
-
-const assembleAbsoluteXMode = (tokens) => {
-	const word = tokens[0].substring(1).toLowerCase();
-	return ["1e", word.substring(2, 4), word.substring(0, 2)];
-};
-
-export default (tokens) => {
-	if (isAccumulatorMode(tokens)) return assembleAccumulatorMode(tokens);
-	if (isZeroPageMode(tokens)) return assembleZeroPageMode(tokens);
-	if (isZeroPageXMode(tokens)) return assembleZeroPageXMode(tokens);
-	if (isAbsoluteMode(tokens)) return assembleAbsoluteMode(tokens);
-	if (isAbsoluteXMode(tokens)) return assembleAbsoluteXMode(tokens);
+export default (params) => {
+	if (absolute.isMode(params)) return absolute.assemble("0e", params);
+	if (absoluteX.isMode(params)) return absoluteX.assemble("1e", params);
+	if (accumulator.isMode(params)) return accumulator.assemble("0a");
+	if (zeroPage.isMode(params)) return zeroPage.assemble("06", params);
+	if (zeroPageX.isMode(params)) return zeroPageX.assemble("16", params);
 };
