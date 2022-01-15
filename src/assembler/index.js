@@ -1,26 +1,71 @@
+import { lex } from "./lexer";
 import opcodes from "./opcodes";
 
-const cleanLine = (line) => {
-	const removedComments = line.replace(/^(.*?);.*/, "$1");
-	const trimmedLine = removedComments.trim();
+// MEMORY MAP
+/*
+	ZeroPage => $00 - $ff
+	Stack => $0100 - $01ff
+	Screen Memory => $0400 - $07e7
+	Program ROM => $8000 - $ffff
+*/
 
-	return trimmedLine;
-};
+// SIMPLE PROGRAM
+/*
+posLo = $00	; pointer position of current pixel
+posHi = $01
 
-const assemble = (code = "") => {
-	const lines = code.split("\n");
+SPEED = $01
+BLACK_COLOR = $00
+WHITE_COLOR = $01
 
-	return lines.reduce((prevVal, line) => {
-		const tokens = cleanLine(line).split(/[ ,]+/);
+	jsr init
+	jsr gameLoop
 
-		if (tokens.length > 0 && tokens[0] !== "") {
-			const opcode = tokens[0].toLowerCase();
-			const bytes = opcodes[opcode](tokens.slice(1));
-			prevVal.push(bytes);
-		}
+init:
+	jsr initSnake
+	rts
 
-		return prevVal;
-	}, []);
+initSnake:
+	lda #$00
+	sta posLo
+	lda #$04
+	sta posHi
+	lda #WHITE_COLOR
+	ldy #$00
+	sta (posHi), y
+	rts
+
+gameLoop:
+	ldy #$00
+loopPixels:
+	lda #BLACK_COLOR
+	sta (posHi), y
+	lda #SPEED
+	clc
+	adc posLo	; only the lo byte gets incremented $00-$ff
+	sta snakePosLo
+	lda #WHITE_COLOR
+	iny
+	sta (posHi), y
+	jmp gameLoop
+*/
+
+const assemble = ({ programRom = "$8000", src = "" }) => {
+	const { lines, symbolTable } = lex(src);
+	console.log(lines);
+	console.log(symbolTable);
+
+	// return lines.reduce((prevVal, line) => {
+	// 	const tokens = cleanLine(line).split(/[ ,]+/);
+
+	// 	if (tokens.length > 0 && tokens[0] !== "") {
+	// 		const opcode = tokens[0].toLowerCase();
+	// 		const bytes = opcodes[opcode](tokens.slice(1));
+	// 		prevVal.push(bytes);
+	// 	}
+
+	// 	return prevVal;
+	// }, []);
 };
 
 const getBinary = (assembledLines) => {
